@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour
+public class Menus : MonoBehaviour
 {
     [SerializeField]
-    private Button quitButton;
+    private Button quitButtonStart;
     [SerializeField]
-    private Button mainPlayButton;
-    [SerializeField]
-    private Button controlsPlayButton;
+    private Button quitButtonEnd;
 
     // Start is called before the first frame update
     void Start()
     {
-        quitButton.onClick.AddListener(Application.Quit);
+        quitButtonStart.onClick.AddListener(Application.Quit);
+        quitButtonEnd.onClick.AddListener(Application.Quit);
     }
 
     // Update is called once per frame
