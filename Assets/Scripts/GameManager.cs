@@ -5,6 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {   
     [SerializeField]
+    private GrappleGenerator generator;
+
+    [SerializeField]
     private GameObject endScreen;
     [SerializeField]
     GameObject player;
@@ -36,7 +39,7 @@ public class GameManager : MonoBehaviour
         grapple.transform.localPosition = new Vector3(0, 1, 0);
         deathWall.transform.localScale = new Vector3(200, 5, 1);
 
-        // todo clear grapples
+        generator.Reset();
     }
 
     public void EndGame()

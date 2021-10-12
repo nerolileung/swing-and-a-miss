@@ -46,6 +46,7 @@ public class DeathWall : MonoBehaviour
     // end the game when player touches the wall
     void OnTriggerEnter2D(Collider2D other)
     {
-        manager.EndGame();
+        if (other.tag == "Player")
+            manager.EndGame();
     }
 }
