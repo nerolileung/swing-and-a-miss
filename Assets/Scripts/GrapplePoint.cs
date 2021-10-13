@@ -15,11 +15,10 @@ public class GrapplePoint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    void OnBecameInvisible(){
-        generator.grapplePoints.Remove(gameObject);
-        Destroy(gameObject);
+        if (transform.position.y < -6)
+        {
+            generator.grapplePoints.Remove(gameObject);
+            Destroy(gameObject);
+        }
     }
 }

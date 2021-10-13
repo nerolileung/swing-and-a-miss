@@ -45,6 +45,7 @@ public class GrappleGenerator : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        grapplePoints.Clear();
 
         // first grapple point matches the grappling hook's starting position 
         grapplePoints.Add(Instantiate(grapplePointPrefab, new Vector3(0, -3.5f, 0), Quaternion.identity, gameObject.transform));
@@ -65,10 +66,14 @@ public class GrappleGenerator : MonoBehaviour
             float localMinX = previousPointPos.x - 4f;
             if (localMinX < minX) localMinX = minX;
 
-            float xPos = Random.Range(localMinX, localMaxX);
-            float yPos = Random.Range(previousPointPos.y + 1, previousPointPos.y + 4);
+            Vector3 pos = Vector3.zero;
 
-            grapplePoints.Add(Instantiate(grapplePointPrefab, new Vector3(xPos, yPos, 0), Quaternion.identity, gameObject.transform));
+            do {
+                pos.x = Random.Range(localMinX, localMaxX);
+                pos.y = Random.Range(previousPointPos.y, previousPointPos.y + 3);
+            } while (Vector3.Distance(pos, previousPointPos) < 2);
+
+            grapplePoints.Add(Instantiate(grapplePointPrefab, pos, Quaternion.identity, gameObject.transform));
         }
     }
 

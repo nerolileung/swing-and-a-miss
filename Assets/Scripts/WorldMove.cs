@@ -22,10 +22,10 @@ public class WorldMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // scroll up, but only when player is at rest
-        if (manager.gamePlaying && player.transform.position.y > -2 && grapple.IsAiming())
+        // scroll up when grapple has advanced
+        if (manager.gamePlaying && grapple.prevPos.y > -1 && grapple.IsAttached())
         {
-            float modifier = Mathf.Lerp(1, 15, (player.transform.position.y+2)/9);
+            float modifier = Mathf.Lerp(1, 10, (grapple.prevPos.y+1)/7);
             foreach (Transform child in transform)
             {
                 child.position -= Vector3.up * Time.deltaTime * modifier;

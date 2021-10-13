@@ -13,7 +13,7 @@ public class Grapple : MonoBehaviour
 
     GrappleStates state;
     Vector2 mousePos;
-    Vector2 prevPos;
+    public Vector2 prevPos;
 
     Rigidbody2D rb;
     TargetJoint2D joint;
@@ -107,9 +107,12 @@ public class Grapple : MonoBehaviour
         {
             state = GrappleStates.PULLING;
 
+            // score based on distance between previous and current point
+            manager.score += Mathf.FloorToInt(Vector2.Distance(rb.position, prevPos));
+
             // set new grapple positions
             transform.position = other.transform.position;
-            prevPos = new Vector2 (transform.position.x, transform.position.y);
+            prevPos = new Vector2(transform.position.x, transform.position.y);
             rb.velocity = Vector2.zero;
 
             // set new player positions
@@ -125,9 +128,9 @@ public class Grapple : MonoBehaviour
         prevPos = transform.position;
     }
 
-    public bool IsAiming()
+    public bool IsAttached()
     {
-        return state == GrappleStates.AIMING;
+        return state == GrappleStates.AIMING || state == GrappleStates.PULLING;
     }
 
     public void MoveDown(Vector2 distance)
