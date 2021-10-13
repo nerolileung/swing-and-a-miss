@@ -62,8 +62,8 @@ public class Grapple : MonoBehaviour
                     state = GrappleStates.FIRING;
                 }
             }
-            // pull grapple back if it goes too far
-            else if (state == GrappleStates.FIRING && Vector2.Distance(rb.position, prevPos) > 5 && !joint.enabled)
+            // pull grapple back if it goes too far or slows down
+            else if (state == GrappleStates.FIRING && (Vector2.Distance(rb.position, prevPos) > 5 || rb.velocity.magnitude < 1) && !joint.enabled)
             {
                 joint.target = prevPos;
                 joint.enabled = true;

@@ -26,22 +26,30 @@ public class DeathWall : MonoBehaviour
     {
         if (manager.gamePlaying)
         {
-            cooldownTimerCurrent -= Time.deltaTime;
+            if (GetComponent<Renderer>().isVisible)
+            {
+                cooldownTimerCurrent -= Time.deltaTime;
 
-            if (cooldownTimerCurrent > 0 && advancing)
-            {
-                // wall advances upwards
-                Vector3 scaleDifference;
-                scaleDifference.x = 0;
-                scaleDifference.z = 0;
-                scaleDifference.y = Time.deltaTime * advanceSpeed;
-                transform.localScale += scaleDifference;
+                if (cooldownTimerCurrent > 0 && advancing)
+                {
+                    // wall advances upwards
+                    Vector3 scaleDifference;
+                    scaleDifference.x = 0;
+                    scaleDifference.z = 0;
+                    scaleDifference.y = Time.deltaTime * advanceSpeed;
+                    transform.localScale += scaleDifference;
+                }
+                else if (cooldownTimerCurrent < 0)
+                {
+                    cooldownTimerCurrent += cooldownTimerMax;
+                    advancing = !advancing;
+                    advanceSpeed += Time.deltaTime;
+                }
             }
-            else if (cooldownTimerCurrent < 0)
+            else // compensate for camera and player movement
             {
-                cooldownTimerCurrent += cooldownTimerMax;
-                advancing = !advancing;
-                advanceSpeed += Time.deltaTime;
+                transform.localScale = new Vector3(200, 3, 1);
+                transform.position = new Vector3(0, -6, 0);
             }
         }
     }
@@ -51,11 +59,5 @@ public class DeathWall : MonoBehaviour
     {
         if (other.tag == "Player")
             manager.EndGame();
-    }
-
-    // move up
-    void OnBecameInvisible(){
-        transform.localScale = new Vector3(200, 3, 1);
-        transform.position = new Vector3(0, -6, 0);
     }
 }
