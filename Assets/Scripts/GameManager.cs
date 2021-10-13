@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
         gamePlaying = true;
         
         // reset everything to starting positions
-        player.transform.position = new Vector3(0, -5, 0);
-        grapple.transform.localPosition = new Vector3(0, 1, 0);
+        player.transform.position = new Vector3(0, -4, 0);
+        grapple.transform.position = new Vector3(0, 1, 0);
         deathWall.transform.localScale = new Vector3(200, 5, 1);
 
         generator.Reset();
