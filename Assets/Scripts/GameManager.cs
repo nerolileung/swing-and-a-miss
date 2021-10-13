@@ -36,8 +36,9 @@ public class GameManager : MonoBehaviour
         
         // reset everything to starting positions
         player.transform.position = new Vector3(0, -4, 0);
-        grapple.transform.position = new Vector3(0, 1, 0);
+        grapple.GetComponent<Grapple>().Reset();
         deathWall.transform.localScale = new Vector3(200, 5, 1);
+        deathWall.GetComponent<DeathWall>().advanceSpeed = 1f;
 
         generator.Reset();
     }

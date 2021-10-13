@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GrapplePoint : MonoBehaviour
 {
+    public static GrappleGenerator generator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +16,10 @@ public class GrapplePoint : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void OnBecameInvisible(){
+        generator.grapplePoints.Remove(gameObject);
+        Destroy(gameObject);
     }
 }

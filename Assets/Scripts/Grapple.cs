@@ -13,12 +13,17 @@ public class Grapple : MonoBehaviour
 
     GrappleStates state;
     Vector2 mousePos;
-    Vector3 attachPos;
+    Vector2 prevPos;
+
+    Rigidbody2D rb;
+    TargetJoint2D joint;
 
     enum GrappleStates
     {
         AIMING = 0,
+        LAUNCH,
         FIRING,
+        RETURNING,
         PULLING
     }
 
@@ -26,29 +31,55 @@ public class Grapple : MonoBehaviour
     void Start()
     {
         state = GrappleStates.AIMING;
-        mousePos = new Vector2();
-        attachPos = transform.position;
+        mousePos = Vector2.zero;
+        rb = gameObject.GetComponent<Rigidbody2D>();
+        prevPos = new Vector2(0, -3.5f);
+        joint = gameObject.GetComponent<TargetJoint2D>();
+        joint.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (manager.gamePlaying)
         {
-            switch (state)
+            if (state == GrappleStates.AIMING || state == GrappleStates.LAUNCH)
             {
-                case GrappleStates.AIMING:
-                    Vector3 targetPos = grappleManager.cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 10f));
-                    targetPos.z = 0;
-                    // position grapple along player-to-mouse vector
-                    transform.position = Vector3.MoveTowards(attachPos, targetPos, 0.5f);
-                break;
-                case GrappleStates.FIRING:
-                break;
-                case GrappleStates.PULLING:
-                    if (Vector3.Distance(transform.position,player.transform.position) < 0.1f)
-                        state = GrappleStates.AIMING;
-                break;
+                // need to know where the mouse is for both of these states
+                Vector3 targetPos = grappleManager.cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, 10f));
+                targetPos.z = 0;
+                Vector2 direction = new Vector2(targetPos.x, targetPos.y) - prevPos;
+
+
+                if (state == GrappleStates.AIMING)
+                {
+                    // position grapple according to mouse
+                    rb.MovePosition(prevPos + Vector2.ClampMagnitude(direction, 0.5f));
+                }
+                else
+                {
+                    // add force to grapple in mouse direction
+                    rb.AddForce(direction, ForceMode2D.Impulse);
+                    state = GrappleStates.FIRING;
+                }
+            }
+            // pull grapple back if it goes too far
+            else if (state == GrappleStates.FIRING && Vector2.Distance(rb.position, prevPos) > 5 && !joint.enabled)
+            {
+                joint.target = prevPos;
+                joint.enabled = true;
+                state = GrappleStates.RETURNING;
+                rb.velocity = Vector2.zero;
+            }
+            // return to aiming if grapple has returned
+            else if (state == GrappleStates.RETURNING && Vector2.Distance(rb.position, joint.target) < 0.1f)
+            {
+                joint.enabled = false;
+                state = GrappleStates.AIMING;
+            }
+            // also return to aiming if player is close enough
+            else if (state == GrappleStates.PULLING && Vector2.Distance(rb.position, player.transform.position) < 1)
+            {
+                state = GrappleStates.AIMING;
             }
         }
     }
@@ -65,7 +96,7 @@ public class Grapple : MonoBehaviour
             // did left mouse button get clicked?
             if (currentEvent.button == 0 && currentEvent.isMouse && state == GrappleStates.AIMING)
             {
-                state = GrappleStates.FIRING;
+                state = GrappleStates.LAUNCH;
             }
         }
     }
@@ -75,12 +106,33 @@ public class Grapple : MonoBehaviour
         if (state == GrappleStates.FIRING && other.gameObject.name == "Grapple Point(Clone)")
         {
             state = GrappleStates.PULLING;
-            transform.position = other.transform.position;
-            attachPos = transform.position;
 
-            /*Vector3 playerTargetPos = transform.position;
-            playerTargetPos.y -= 1;
-            transform.parent.position = playerTargetPos;*/
+            // set new grapple positions
+            transform.position = other.transform.position;
+            prevPos = new Vector2 (transform.position.x, transform.position.y);
+            rb.velocity = Vector2.zero;
+
+            // set new player positions
+            player.GetComponent<TargetJoint2D>().target = rb.position;
+            // player.GetComponent<TargetJoint2D>().anchor = player.GetComponent<Rigidbody2D>().ClosestPoint(rb.position); todo more satisfying swinging
         }
+    }
+
+    public void Reset()
+    {
+        state = GrappleStates.AIMING;
+        transform.position = new Vector3(0, -3.5f, 0);
+        prevPos = transform.position;
+    }
+
+    public bool IsAiming()
+    {
+        return state == GrappleStates.AIMING;
+    }
+
+    public void MoveDown(Vector2 distance)
+    {
+        prevPos -= distance;
+        joint.target -= distance;
     }
 }

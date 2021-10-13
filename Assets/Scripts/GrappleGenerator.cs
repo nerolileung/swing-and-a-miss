@@ -20,12 +20,13 @@ public class GrappleGenerator : MonoBehaviour
     void Start()
     {
         Vector3 point = cam.ScreenToWorldPoint(new Vector3(cam.pixelWidth,cam.pixelHeight,10f));
-        maxX = point.x;
-        minX = point.x * -1;
+        maxX = point.x - 1;
+        minX = (point.x * -1) + 1;
 
-        grapplePointCount = 0;
         grapplePointPrefab = Resources.Load<GameObject>("Grapple Point");
         grapplePoints = new List<GameObject>();
+
+        GrapplePoint.generator = this;
     }
 
     // Update is called once per frame
@@ -34,16 +35,7 @@ public class GrappleGenerator : MonoBehaviour
         if (manager.gamePlaying)
         {
             // keep 10 points on screen at all times
-            while (grapplePoints.Count < 10)
-            {
-                // todo weight towards player position
-                float xPos = Random.Range(minX, maxX);
-                float yPos = Random.Range(4f, 5f);
-
-                grapplePoints.Add(Instantiate(grapplePointPrefab, new Vector3(xPos, yPos, 0), Quaternion.identity, gameObject.transform));
-
-                grapplePointCount++;
-            }
+            GeneratePoints();
         }
     }
 
@@ -55,17 +47,37 @@ public class GrappleGenerator : MonoBehaviour
         }
 
         // first grapple point matches the grappling hook's starting position 
-        grapplePointCount = 1;
         grapplePoints.Add(Instantiate(grapplePointPrefab, new Vector3(0, -3.5f, 0), Quaternion.identity, gameObject.transform));
 
-        for (int i = 1; i < 10; i++)
+        GeneratePoints();
+    }
+
+    void GeneratePoints()
+    {
+        while (grapplePoints.Count < 10)
         {
-            float xPos = Random.Range(minX, maxX);
-            float yPos = Random.Range(i - 5f, i - 4f);
+            Vector3 previousPointPos = grapplePoints[grapplePoints.Count-1].transform.position;
+
+            // weight towards previous point
+            float localMaxX = previousPointPos.x + 4f;
+            if (localMaxX > maxX) localMaxX = maxX;
+
+            float localMinX = previousPointPos.x - 4f;
+            if (localMinX < minX) localMinX = minX;
+
+            float xPos = Random.Range(localMinX, localMaxX);
+            float yPos = Random.Range(previousPointPos.y + 1, previousPointPos.y + 4);
 
             grapplePoints.Add(Instantiate(grapplePointPrefab, new Vector3(xPos, yPos, 0), Quaternion.identity, gameObject.transform));
+        }
+    }
 
-            grapplePointCount++;
+    public void MoveDown(Vector3 distance)
+    {
+        transform.position = Vector3.zero;
+        foreach (Transform child in transform)
+        {
+            child.position -= distance;
         }
     }
 }

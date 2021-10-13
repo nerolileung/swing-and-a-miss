@@ -385,7 +385,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -404,12 +404,12 @@ TargetJoint2D:
   m_ConnectedRigidBody: {fileID: 0}
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
-  m_Anchor: {x: 0, y: 0}
+  m_Anchor: {x: 0, y: 0.5}
   m_Target: {x: 0, y: -4}
-  m_AutoConfigureTarget: 1
-  m_MaxForce: 1000
-  m_DampingRatio: 1
-  m_Frequency: 5
+  m_AutoConfigureTarget: 0
+  m_MaxForce: 50
+  m_DampingRatio: 0.5
+  m_Frequency: 10
 --- !u!1 &287880321
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +764,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 595169634}
+  - component: {fileID: 595169635}
   m_Layer: 0
   m_Name: World Container
   m_TagString: Untagged
@@ -788,6 +789,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &595169635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595169633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49d1a8020d384e9c938560348f04798, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 1409333163}
+  generator: {fileID: 1296499018}
+  player: {fileID: 174503835}
+  grapple: {fileID: 1326168963}
 --- !u!1 &792439834
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,7 +956,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Mouse: Aim Grapple
 
-    Left Click: Fire Grapple'
+    Left Click: Launch'
 --- !u!222 &802604489
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1503,8 +1520,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1992574678}
+  m_Children: []
   m_Father: {fileID: 595169634}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1521,6 +1537,7 @@ GameObject:
   - component: {fileID: 1326168965}
   - component: {fileID: 1326168964}
   - component: {fileID: 1326168963}
+  - component: {fileID: 1326168966}
   m_Layer: 0
   m_Name: Grapple
   m_TagString: Untagged
@@ -1636,7 +1653,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.5
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -1645,6 +1662,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!257 &1326168966
+TargetJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326168960}
+  m_Enabled: 0
+  serializedVersion: 4
+  m_EnableCollision: 1
+  m_ConnectedRigidBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_Anchor: {x: 0, y: 0}
+  m_Target: {x: 0, y: -3}
+  m_AutoConfigureTarget: 0
+  m_MaxForce: 10
+  m_DampingRatio: 1
+  m_Frequency: 1
 --- !u!1 &1336609957
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,6 +2081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 1409333163}
+  advanceSpeed: 0
 --- !u!61 &1505482273
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2901,68 +2938,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 2
   m_AspectRatio: 1
---- !u!1001 &1992574677
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1296499019}
-    m_Modifications:
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 177928655353761983, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-      propertyPath: m_Name
-      value: Grapple Point
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
---- !u!4 &1992574678 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 177928655353761981, guid: 33b8ff2c7b773472db6ecee0ffd5a9b6, type: 3}
-  m_PrefabInstance: {fileID: 1992574677}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1994046258
 GameObject:
   m_ObjectHideFlags: 0

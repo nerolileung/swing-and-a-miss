@@ -9,6 +9,7 @@ public class DeathWall : MonoBehaviour
 
     private float cooldownTimerMax;
     private float cooldownTimerCurrent;
+    public float advanceSpeed;
     private bool advancing;
 
     // Start is called before the first frame update
@@ -16,6 +17,7 @@ public class DeathWall : MonoBehaviour
     {
         cooldownTimerMax = 5f;
         cooldownTimerCurrent = 0f;
+        advanceSpeed = 1f;
         advancing = false;
     }
 
@@ -32,13 +34,14 @@ public class DeathWall : MonoBehaviour
                 Vector3 scaleDifference;
                 scaleDifference.x = 0;
                 scaleDifference.z = 0;
-                scaleDifference.y = Time.deltaTime;
+                scaleDifference.y = Time.deltaTime * advanceSpeed;
                 transform.localScale += scaleDifference;
             }
             else if (cooldownTimerCurrent < 0)
             {
                 cooldownTimerCurrent += cooldownTimerMax;
                 advancing = !advancing;
+                advanceSpeed += Time.deltaTime;
             }
         }
     }
@@ -48,5 +51,11 @@ public class DeathWall : MonoBehaviour
     {
         if (other.tag == "Player")
             manager.EndGame();
+    }
+
+    // move up
+    void OnBecameInvisible(){
+        transform.localScale = new Vector3(200, 3, 1);
+        transform.position = new Vector3(0, -6, 0);
     }
 }
