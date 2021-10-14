@@ -48,7 +48,7 @@ public class DeathWall : MonoBehaviour
             }
             else // compensate for camera and player movement
             {
-                transform.localScale = new Vector3(200, 3.2f, 1);
+                transform.localScale = new Vector3(11, 4.5f, 1);
                 transform.position = new Vector3(0, -6, 0);
 
                 // reset advancement cooldown

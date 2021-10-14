@@ -8,15 +8,14 @@ public class WorldMove : MonoBehaviour
     GameManager manager;
     [SerializeField]
     GrappleGenerator generator;
-    [SerializeField]
     GameObject player;
-    [SerializeField]
     Grapple grapple;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = manager.GetPlayer();
+        grapple = manager.GetGrapple().GetComponent<Grapple>();
     }
 
     // Update is called once per frame

@@ -8,7 +8,6 @@ public class Grapple : MonoBehaviour
     GrappleGenerator grappleManager;
     [SerializeField]
     GameManager manager;
-    [SerializeField]
     GameObject player;
 
     GrappleStates state;
@@ -30,10 +29,14 @@ public class Grapple : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = manager.GetPlayer();
+
         state = GrappleStates.AIMING;
         mousePos = Vector2.zero;
-        rb = gameObject.GetComponent<Rigidbody2D>();
         prevPos = new Vector2(0, -3.5f);
+
+        rb = gameObject.GetComponent<Rigidbody2D>();
+
         joint = gameObject.GetComponent<TargetJoint2D>();
         joint.enabled = false;
     }
@@ -117,7 +120,6 @@ public class Grapple : MonoBehaviour
 
             // set new player positions
             player.GetComponent<TargetJoint2D>().target = rb.position;
-            // player.GetComponent<TargetJoint2D>().anchor = player.GetComponent<Rigidbody2D>().ClosestPoint(rb.position); todo more satisfying swinging
         }
     }
 

@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GrappleGenerator generator;
 
+    // UI elements
     [SerializeField]
     private GameObject endScreen;
     [SerializeField]
@@ -16,6 +17,8 @@ public class GameManager : MonoBehaviour
     private GameObject HUD;
     [SerializeField]
     private Text scoreHUD;
+
+    // world objects
     [SerializeField]
     GameObject player;
     [SerializeField]
@@ -55,7 +58,7 @@ public class GameManager : MonoBehaviour
 
         grapple.GetComponent<Grapple>().Reset();
 
-        deathWall.transform.localScale = new Vector3(200, 5, 1);
+        deathWall.transform.localScale = new Vector3(11, 4.5f, 1);
         deathWall.GetComponent<DeathWall>().advanceSpeed = 1f;
 
         generator.Reset();
@@ -70,5 +73,18 @@ public class GameManager : MonoBehaviour
         endScreen.SetActive(true);
         player.GetComponent<TargetJoint2D>().target = player.transform.position;
         player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+    }
+
+    public GameObject GetPlayer()
+    {
+        return player;
+    }
+    public GameObject GetGrapple()
+    {
+        return grapple;
+    }
+    public GameObject GetWall()
+    {
+        return deathWall;
     }
 }
