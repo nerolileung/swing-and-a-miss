@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class GrapplePoint : MonoBehaviour
 {
-    public static GrappleGenerator generator;
+    private bool active;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        active = false;
     }
 
     // Update is called once per frame
@@ -17,8 +17,20 @@ public class GrapplePoint : MonoBehaviour
     {
         if (transform.position.y < -6)
         {
-            generator.grapplePoints.Remove(gameObject);
-            Destroy(gameObject);
+            active = false;
         }
+    }
+
+    public void SetTransform(Vector3 position)
+    {
+        transform.position = position;
+    }
+    public bool IsActive()
+    {
+        return active;
+    }
+    public void SetActive(bool toggle)
+    {
+        active = toggle;
     }
 }

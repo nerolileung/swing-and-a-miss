@@ -12,9 +12,10 @@ public class GrappleGenerator : MonoBehaviour
     private float minX;
     private float maxX;
     int grapplePointCount;
+    Vector3 highestPoint;
 
     GameObject grapplePointPrefab;
-    public List<GameObject> grapplePoints;
+    GrapplePoint[] grapplePoints;
 
     // Start is called before the first frame update
     void Start()
@@ -24,9 +25,13 @@ public class GrappleGenerator : MonoBehaviour
         minX = (point.x * -1) + 1;
 
         grapplePointPrefab = Resources.Load<GameObject>("Grapple Point");
-        grapplePoints = new List<GameObject>();
-
-        GrapplePoint.generator = this;
+        grapplePointCount = 10;
+        grapplePoints = new GrapplePoint[grapplePointCount];
+        for (int i = 0; i < grapplePointCount; i++)
+        {
+            grapplePoints[i] = Instantiate(grapplePointPrefab, new Vector3(0,-8,0), Quaternion.identity, gameObject.transform).GetComponent<GrapplePoint>();
+        }
+        highestPoint = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -41,39 +46,49 @@ public class GrappleGenerator : MonoBehaviour
 
     public void Reset()
     {
-        foreach (Transform child in transform)
+        for (int i = 0; i < grapplePointCount; i++)
         {
-            Destroy(child.gameObject);
+            grapplePoints[i].SetTransform(new Vector3(0,-8,0));
+            grapplePoints[i].SetActive(false);
         }
-        grapplePoints.Clear();
 
         // first grapple point matches the grappling hook's starting position 
-        grapplePoints.Add(Instantiate(grapplePointPrefab, new Vector3(0, -3.5f, 0), Quaternion.identity, gameObject.transform));
+        highestPoint = new Vector3(0, -3.5f, 0);
+        grapplePoints[0].SetTransform(highestPoint);
+        grapplePoints[0].SetActive(true);
 
         GeneratePoints();
     }
 
     void GeneratePoints()
     {
-        while (grapplePoints.Count < 10)
+        for (int i = 0; i < grapplePointCount; i++)
         {
-            Vector3 previousPointPos = grapplePoints[grapplePoints.Count-1].transform.position;
+            if (!grapplePoints[i].IsActive())
+            {
+                // weight towards previous point
+                float localMaxX = highestPoint.x + 4f;
+                if (localMaxX > maxX) localMaxX = maxX;
 
-            // weight towards previous point
-            float localMaxX = previousPointPos.x + 4f;
-            if (localMaxX > maxX) localMaxX = maxX;
+                float localMinX = highestPoint.x - 4f;
+                if (localMinX < minX) localMinX = minX;
 
-            float localMinX = previousPointPos.x - 4f;
-            if (localMinX < minX) localMinX = minX;
+                Vector3 pos = Vector3.zero;
 
-            Vector3 pos = Vector3.zero;
+                do {
+                    pos.x = Random.Range(localMinX, localMaxX);
+                    pos.y = Random.Range(highestPoint.y, highestPoint.y + 3);
+                } while (Vector3.Distance(pos, highestPoint) < 2);
 
-            do {
-                pos.x = Random.Range(localMinX, localMaxX);
-                pos.y = Random.Range(previousPointPos.y, previousPointPos.y + 3);
-            } while (Vector3.Distance(pos, previousPointPos) < 2);
+                grapplePoints[i].SetTransform(pos);
 
-            grapplePoints.Add(Instantiate(grapplePointPrefab, pos, Quaternion.identity, gameObject.transform));
+                if (pos.y > highestPoint.y)
+                {
+                    highestPoint = pos;
+                }
+
+                grapplePoints[i].SetActive(true);
+            }
         }
     }
 
@@ -84,5 +99,6 @@ public class GrappleGenerator : MonoBehaviour
         {
             child.position -= distance;
         }
+        highestPoint -= distance;
     }
 }
